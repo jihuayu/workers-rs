@@ -405,8 +405,7 @@ binding = "my_queue"
 `workers-rs` has experimental support for [Workers RPC](https://developers.cloudflare.com/workers/runtime-apis/rpc/).
 For now, this relies on JavaScript bindings and may require some manual usage of `wasm-bindgen`. 
 
-Not all features of RPC are supported yet (or have not been tested), including:
-- Stub forwarding
+Core RPC helper paths are available, including args/returns bridge, instance handles, and stub-forwarding primitives.
 
 ### RPC Server
 

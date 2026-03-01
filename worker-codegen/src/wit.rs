@@ -242,6 +242,10 @@ fn expand_wit(path: &str) -> anyhow::Result<syn::File> {
             &struct_name,
             &syn::parse_str("::worker::Stub")?,
         )?));
+        items.push(syn::Item::Impl(expand_from_impl(
+            &struct_name,
+            &syn::parse_str("::worker::RpcStubForward")?,
+        )?));
     }
 
     let rust_file = syn::File {
@@ -275,5 +279,6 @@ mod tests {
 
         assert!(source.contains("::worker::rpc::to_js_value"));
         assert!(source.contains("::worker::rpc::from_js_value"));
+        assert!(source.contains("impl From<::worker::RpcStubForward>"));
     }
 }

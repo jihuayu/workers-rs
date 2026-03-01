@@ -108,7 +108,7 @@
 //! For now, this relies on JavaScript bindings and may require some manual usage of `wasm-bindgen`.
 //!
 //! Not all features of RPC are supported yet (or have not been tested), including:
-//! - Stub forwarding
+//! - No known major limitations in core helper coverage, but generated bindings still follow WIT surface constraints.
 //!
 //! ## RPC Server
 //!
@@ -196,6 +196,7 @@ pub use crate::response::{EncodeBody, IntoResponse, Response, ResponseBody, Resp
 pub use crate::router::{RouteContext, RouteParams, Router};
 pub use crate::rpc::*;
 pub use crate::rpc_instance::*;
+pub use crate::rpc_stub_forward::*;
 pub use crate::schedule::*;
 pub use crate::secret_store::SecretStore;
 pub use crate::socket::*;
@@ -248,6 +249,7 @@ mod response;
 mod router;
 mod rpc;
 mod rpc_instance;
+mod rpc_stub_forward;
 mod schedule;
 mod secret_store;
 pub mod send;
