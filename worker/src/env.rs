@@ -7,6 +7,7 @@ use crate::d1::D1Database;
 use crate::kv::KvStore;
 use crate::rate_limit::RateLimiter;
 use crate::Ai;
+use crate::DynamicWorkerLoader;
 #[cfg(feature = "queue")]
 use crate::Queue;
 use crate::{durable::ObjectNamespace, Bucket, DynamicDispatcher, Fetcher, Result, SecretStore};
@@ -90,6 +91,11 @@ impl Env {
 
     /// Access a Dynamic Dispatcher for dispatching events to other workers.
     pub fn dynamic_dispatcher(&self, binding: &str) -> Result<DynamicDispatcher> {
+        self.get_binding(binding)
+    }
+
+    /// Access a Dynamic Worker Loader by the binding name configured in your wrangler.toml file.
+    pub fn dynamic_worker_loader(&self, binding: &str) -> Result<DynamicWorkerLoader> {
         self.get_binding(binding)
     }
 

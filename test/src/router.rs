@@ -1,8 +1,8 @@
 use crate::{
     alarm, analytics_engine, assets, auto_response, browser_rendering, cache, container, counter,
-    d1, durable, fetch, form, js_snippets, kv, put_raw, queue, r2, rate_limit, request,
-    secret_store, service, socket, sql_counter, sql_iterator, user, ws, SomeSharedData,
-    GLOBAL_STATE,
+    d1, durable, dynamic_worker_loader, fetch, form, js_snippets, kv, put_raw, queue, r2,
+    rate_limit, request, secret_store, service, socket, sql_counter, sql_iterator, user, ws,
+    SomeSharedData, GLOBAL_STATE,
 };
 #[cfg(feature = "http")]
 use std::convert::TryInto;
@@ -117,6 +117,8 @@ macro_rules! add_routes (
     add_route!($obj, get, "/analytics-engine", analytics_engine::handle_analytics_event);
     add_route!($obj, get, "/browser-rendering", browser_rendering::browser_rendering_ok);
     add_route!($obj, get, "/browser-rendering-missing", browser_rendering::browser_rendering_missing);
+    add_route!($obj, get, "/dynamic-worker-loader", dynamic_worker_loader::dynamic_worker_loader_ok);
+    add_route!($obj, get, "/dynamic-worker-loader-missing", dynamic_worker_loader::dynamic_worker_loader_missing);
     add_route!($obj, get, "/async-request", request::handle_async_request);
     add_route!($obj, get, format_route!("/asset/{}", "name"), assets::handle_asset);
     add_route!($obj, get, "/websocket", ws::handle_websocket);

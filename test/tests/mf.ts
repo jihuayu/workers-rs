@@ -114,6 +114,9 @@ const mf_instance = new Miniflare({
         },
         BROWSER_RENDERING: {
           scriptName: "mini-browser-rendering"
+        },
+        DYNAMIC_WORKER_LOADER: {
+          scriptName: "mini-dynamic-worker-loader"
         }
       },
       ratelimits: {
@@ -143,6 +146,20 @@ const mf_instance = new Miniflare({
         return {
           async render(input) {
             return { ok: true, input };
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-dynamic-worker-loader",
+      modules: true,
+      script: `export default function () {
+        return {
+          async load(workerName) {
+            return {
+              ok: true,
+              workerName,
+            };
           }
         }
       }`

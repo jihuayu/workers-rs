@@ -22,6 +22,7 @@ mod container;
 mod counter;
 mod d1;
 mod durable;
+mod dynamic_worker_loader;
 mod fetch;
 mod form;
 mod js_snippets;
