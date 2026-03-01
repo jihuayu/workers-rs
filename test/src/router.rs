@@ -125,6 +125,8 @@ macro_rules! add_routes (
     add_route!($obj, get, "/dynamic-dispatch-args", dynamic_dispatch_binding::dynamic_dispatch_with_args);
     add_route!($obj, get, "/dynamic-dispatch-options", dynamic_dispatch_binding::dynamic_dispatch_with_options);
     add_route!($obj, get, "/images-binding", images_binding::images_binding_ok);
+    add_route!($obj, get, "/images-binding-info", images_binding::images_binding_info);
+    add_route!($obj, get, "/images-binding-pipeline", images_binding::images_binding_pipeline);
     add_route!($obj, get, "/images-binding-missing", images_binding::images_binding_missing);
     add_route!($obj, get, "/mtls-certificate", mtls_certificate::mtls_certificate_ok);
     add_route!($obj, get, "/mtls-certificate-missing", mtls_certificate::mtls_certificate_missing);

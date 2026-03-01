@@ -227,7 +227,39 @@ const mf_instance = new Miniflare({
       name: "mini-images-binding",
       modules: true,
       script: `export default function () {
+        const createTransformer = (input, steps = []) => ({
+          transform(options) {
+            return createTransformer(input, [...steps, { type: "transform", options }]);
+          },
+          draw(image) {
+            return createTransformer(input, [...steps, { type: "draw", image }]);
+          },
+          async output() {
+            return {
+              contentType: "image/png",
+              response: {
+                ok: true,
+              },
+              image: {
+                source: input,
+                steps,
+              },
+            };
+          }
+        });
+
         return {
+          async info(input) {
+            return {
+              width: 640,
+              height: 480,
+              format: "png",
+              input,
+            };
+          },
+          input(input) {
+            return createTransformer(input, []);
+          },
           async transform(input) {
             return {
               ok: true,
