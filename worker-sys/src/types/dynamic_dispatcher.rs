@@ -12,6 +12,7 @@ extern "C" {
     pub fn get(
         this: &DynamicDispatcher,
         name: String,
+        args: JsValue,
         options: JsValue,
     ) -> Result<Fetcher, JsValue>;
 }

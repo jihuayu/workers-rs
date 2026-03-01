@@ -22,6 +22,7 @@ mod container;
 mod counter;
 mod d1;
 mod durable;
+mod dynamic_dispatch_binding;
 mod dynamic_worker_loader;
 mod email_binding;
 mod fetch;

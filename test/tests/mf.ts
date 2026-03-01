@@ -118,6 +118,9 @@ const mf_instance = new Miniflare({
         DYNAMIC_WORKER_LOADER: {
           scriptName: "mini-dynamic-worker-loader"
         },
+        DISPATCHER: {
+          scriptName: "mini-dispatcher"
+        },
         IMAGES: {
           scriptName: "mini-images-binding"
         },
@@ -189,6 +192,32 @@ const mf_instance = new Miniflare({
             return {
               ok: true,
               workerName,
+            };
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-dispatcher",
+      modules: true,
+      script: `export default function () {
+        return {
+          get(name, args, options) {
+            return {
+              fetch: async () => {
+                return new Response(
+                  JSON.stringify({
+                    name,
+                    args: args ?? null,
+                    options,
+                  }),
+                  {
+                    headers: {
+                      "content-type": "application/json",
+                    },
+                  }
+                );
+              }
             };
           }
         }
