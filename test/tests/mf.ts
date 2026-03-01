@@ -139,6 +139,12 @@ const mf_instance = new Miniflare({
         EMAIL_SENDER: {
           scriptName: "mini-email-sender"
         },
+        TAIL_EVENT: {
+          scriptName: "mini-tail-event"
+        },
+        TAIL_EVENT_UNKNOWN: {
+          scriptName: "mini-tail-event-unknown"
+        },
         HYPERDRIVE: {
           scriptName: "mini-hyperdrive"
         }
@@ -324,6 +330,38 @@ const mf_instance = new Miniflare({
               from: message.from,
               to: message.to,
             };
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-tail-event",
+      modules: true,
+      script: `export default function () {
+        return {
+          invocationId: "inv-123",
+          spanContext: { traceId: "trace-abc" },
+          timestamp: 1700000000000,
+          sequence: 42,
+          event: {
+            type: "log",
+            message: "hello",
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-tail-event-unknown",
+      modules: true,
+      script: `export default function () {
+        return {
+          invocationId: "inv-unknown",
+          spanContext: { traceId: "trace-unknown" },
+          timestamp: 1700000001234,
+          sequence: 7,
+          event: {
+            type: "futureVariant",
+            payload: { ok: true },
           }
         }
       }`

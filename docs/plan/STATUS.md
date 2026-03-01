@@ -27,13 +27,13 @@ Last updated: `2026-03-01`
 15. `docs/plan/15-pr930-hyperdrive-connect.md`
 16. `docs/plan/16-pr930-r2-start-after-and-put-only-if.md`
 17. `docs/plan/18-email-binding-api-parity.md`
+18. `docs/plan/19-tail-event-typed-api.md`
 
 ## Open (Newly Split From Detailed Diff)
 
-1. `docs/plan/19-tail-event-typed-api.md`
-2. `docs/plan/20-dispatch-namespace-get-args-options.md`
-3. `docs/plan/21-images-binding-pipeline-api-parity.md`
-4. `docs/plan/22-event-macro-signature-validation.md`
+1. `docs/plan/20-dispatch-namespace-get-args-options.md`
+2. `docs/plan/21-images-binding-pipeline-api-parity.md`
+3. `docs/plan/22-event-macro-signature-validation.md`
 
 ## Scope Cleanup Notes
 

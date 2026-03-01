@@ -42,6 +42,7 @@ mod service;
 mod socket;
 mod sql_counter;
 mod sql_iterator;
+mod tail_binding;
 mod user;
 mod vectorize_binding;
 mod version_metadata;
