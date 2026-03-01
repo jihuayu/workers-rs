@@ -123,6 +123,9 @@ const mf_instance = new Miniflare({
         },
         MTLS_CERTIFICATE: {
           scriptName: "mini-mtls-certificate"
+        },
+        VECTORIZE: {
+          scriptName: "mini-vectorize"
         }
       },
       ratelimits: {
@@ -191,6 +194,27 @@ const mf_instance = new Miniflare({
       script: `export default function () {
         return {
           id: "cert-01"
+        }
+      }`
+    },
+    {
+      name: "mini-vectorize",
+      modules: true,
+      script: `export default function () {
+        return {
+          async upsert() {
+            return { ok: true };
+          },
+          async query(input) {
+            return {
+              ok: true,
+              matches: [{ id: "v1", score: 0.99 }],
+              input,
+            };
+          },
+          async delete() {
+            return { ok: true };
+          }
         }
       }`
     }]

@@ -10,6 +10,7 @@ use crate::rate_limit::RateLimiter;
 use crate::Ai;
 use crate::DynamicWorkerLoader;
 use crate::ImagesBinding;
+use crate::VectorizeIndex;
 #[cfg(feature = "queue")]
 use crate::Queue;
 use crate::{durable::ObjectNamespace, Bucket, DynamicDispatcher, Fetcher, Result, SecretStore};
@@ -150,6 +151,11 @@ impl Env {
 
     /// Access a Rate Limiter by the binding name configured in your wrangler.toml file.
     pub fn rate_limiter(&self, binding: &str) -> Result<RateLimiter> {
+        self.get_binding(binding)
+    }
+
+    /// Access a Vectorize index binding by the name configured in your wrangler.toml file.
+    pub fn vectorize(&self, binding: &str) -> Result<VectorizeIndex> {
         self.get_binding(binding)
     }
 }

@@ -200,6 +200,7 @@ pub use crate::secret_store::SecretStore;
 pub use crate::socket::*;
 pub use crate::streams::*;
 pub use crate::version::*;
+pub use crate::vectorize::*;
 pub use crate::websocket::*;
 
 mod abort;
@@ -248,6 +249,7 @@ mod socket;
 mod sql;
 mod streams;
 mod version;
+mod vectorize;
 mod websocket;
 
 /// A `Result` alias defaulting to [`Error`].
