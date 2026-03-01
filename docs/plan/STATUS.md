@@ -30,10 +30,11 @@ Last updated: `2026-03-01`
 18. `docs/plan/19-tail-event-typed-api.md`
 19. `docs/plan/20-dispatch-namespace-get-args-options.md`
 20. `docs/plan/21-images-binding-pipeline-api-parity.md`
+21. `docs/plan/22-event-macro-signature-validation.md`
 
 ## Open (Newly Split From Detailed Diff)
 
-1. `docs/plan/22-event-macro-signature-validation.md`
+None.
 
 ## Scope Cleanup Notes
 

@@ -1,20 +1,24 @@
 use proc_macro::TokenStream;
 use quote::quote;
-use syn::{parse_macro_input, punctuated::Punctuated, token::Comma, Ident, ItemFn};
+use syn::{
+    parse_macro_input, punctuated::Punctuated, token::Comma, Error, Ident, ItemFn, ReturnType,
+};
+
+#[derive(Clone, Copy)]
+enum HandlerType {
+    Fetch,
+    Scheduled,
+    Email,
+    Tail,
+    Start,
+    #[cfg(feature = "queue")]
+    Queue,
+}
 
 pub fn expand_macro(attr: TokenStream, item: TokenStream) -> TokenStream {
     let attrs: Punctuated<Ident, Comma> =
         parse_macro_input!(attr with Punctuated::parse_terminated);
 
-    enum HandlerType {
-        Fetch,
-        Scheduled,
-        Email,
-        Tail,
-        Start,
-        #[cfg(feature = "queue")]
-        Queue,
-    }
     use HandlerType::*;
 
     let mut handler_type = None;
@@ -41,6 +45,10 @@ pub fn expand_macro(attr: TokenStream, item: TokenStream) -> TokenStream {
 
     // create new var using syn item of the attributed fn
     let mut input_fn = parse_macro_input!(item as ItemFn);
+
+    if let Err(err) = validate_signature(&input_fn, handler_type, respond_with_errors) {
+        return err.to_compile_error().into();
+    }
 
     match handler_type {
         Fetch => {
@@ -312,5 +320,139 @@ pub fn expand_macro(attr: TokenStream, item: TokenStream) -> TokenStream {
 
             TokenStream::from(output)
         }
+    }
+}
+
+fn validate_signature(
+    input_fn: &ItemFn,
+    handler_type: HandlerType,
+    respond_with_errors: bool,
+) -> syn::Result<()> {
+    match handler_type {
+        HandlerType::Fetch => {
+            if !input_fn.sig.asyncness.is_some() {
+                return Err(Error::new_spanned(
+                    &input_fn.sig,
+                    "#[event(fetch)] handler must be async",
+                ));
+            }
+            if input_fn.sig.inputs.len() != 3 {
+                return Err(Error::new_spanned(
+                    &input_fn.sig.inputs,
+                    "#[event(fetch)] handler must accept exactly 3 parameters: request, env, ctx",
+                ));
+            }
+            validate_result_return(input_fn, "#[event(fetch)]")
+        }
+        HandlerType::Scheduled => {
+            if !input_fn.sig.asyncness.is_some() {
+                return Err(Error::new_spanned(
+                    &input_fn.sig,
+                    "#[event(scheduled)] handler must be async",
+                ));
+            }
+            if input_fn.sig.inputs.len() != 3 {
+                return Err(Error::new_spanned(
+                    &input_fn.sig.inputs,
+                    "#[event(scheduled)] handler must accept exactly 3 parameters: event, env, ctx",
+                ));
+            }
+            validate_result_return(input_fn, "#[event(scheduled)]")
+        }
+        HandlerType::Email => {
+            if !input_fn.sig.asyncness.is_some() {
+                return Err(Error::new_spanned(
+                    &input_fn.sig,
+                    "#[event(email)] handler must be async",
+                ));
+            }
+            if input_fn.sig.inputs.len() != 3 {
+                return Err(Error::new_spanned(
+                    &input_fn.sig.inputs,
+                    "#[event(email)] handler must accept exactly 3 parameters: message, env, ctx",
+                ));
+            }
+            validate_result_return(input_fn, "#[event(email)]")
+        }
+        HandlerType::Tail => {
+            if !input_fn.sig.asyncness.is_some() {
+                return Err(Error::new_spanned(
+                    &input_fn.sig,
+                    "#[event(tail)] handler must be async",
+                ));
+            }
+            if input_fn.sig.inputs.len() != 3 {
+                return Err(Error::new_spanned(
+                    &input_fn.sig.inputs,
+                    "#[event(tail)] handler must accept exactly 3 parameters: event, env, ctx",
+                ));
+            }
+            validate_result_return(input_fn, "#[event(tail)]")
+        }
+        #[cfg(feature = "queue")]
+        HandlerType::Queue => {
+            if !input_fn.sig.asyncness.is_some() {
+                return Err(Error::new_spanned(
+                    &input_fn.sig,
+                    "#[event(queue)] handler must be async",
+                ));
+            }
+            if input_fn.sig.inputs.len() != 3 {
+                return Err(Error::new_spanned(
+                    &input_fn.sig.inputs,
+                    "#[event(queue)] handler must accept exactly 3 parameters: batch, env, ctx",
+                ));
+            }
+            validate_result_return(input_fn, "#[event(queue)]")
+        }
+        HandlerType::Start => {
+            if input_fn.sig.asyncness.is_some() {
+                return Err(Error::new_spanned(
+                    &input_fn.sig,
+                    "#[event(start)] handler must not be async",
+                ));
+            }
+            if !input_fn.sig.inputs.is_empty() {
+                return Err(Error::new_spanned(
+                    &input_fn.sig.inputs,
+                    "#[event(start)] handler must not accept any parameters",
+                ));
+            }
+            if !matches!(input_fn.sig.output, ReturnType::Default) {
+                return Err(Error::new_spanned(
+                    &input_fn.sig.output,
+                    "#[event(start)] handler must not return a value",
+                ));
+            }
+            Ok(())
+        }
+    }?;
+
+    if respond_with_errors && !matches!(handler_type, HandlerType::Fetch) {
+        return Err(Error::new_spanned(
+            &input_fn.sig,
+            "respond_with_errors is only valid for #[event(fetch)] handlers",
+        ));
+    }
+
+    Ok(())
+}
+
+fn validate_result_return(input_fn: &ItemFn, event_name: &str) -> syn::Result<()> {
+    match &input_fn.sig.output {
+        ReturnType::Type(_, ty) => {
+            if quote!(#ty).to_string().contains("Result") {
+                Ok(())
+            } else {
+                Err(Error::new_spanned(
+                    ty,
+                    format!("{event_name} handler must return Result<...>"),
+                ))
+            }
+        }
+        ReturnType::Default => Err(Error::new_spanned(
+            &input_fn.sig,
+            format!("{event_name} handler must return Result<...>"),
+        )),
     }
 }

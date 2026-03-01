@@ -1,0 +1,5 @@
+error: #[event(email)] handler must accept exactly 3 parameters: message, env, ctx
+ --> tests/ui/event_invalid_email_arity.rs:4:30
+  |
+4 | async fn bad_email_signature(_msg: (), _env: ()) -> Result<(), ()> {
+  |                              ^^^^^^^^^^^^^^^^^^

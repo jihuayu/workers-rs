@@ -1,0 +1,5 @@
+error: #[event(start)] handler must not accept any parameters
+ --> tests/ui/event_invalid_start_signature.rs:4:24
+  |
+4 | fn bad_start_signature(_env: ()) {
+  |                        ^^^^^^^^

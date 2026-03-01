@@ -1,0 +1,5 @@
+error: #[event(fetch)] handler must be async
+ --> tests/ui/event_invalid_fetch_not_async.rs:4:1
+  |
+4 | fn bad_fetch_signature(_req: (), _env: (), _ctx: ()) -> Result<(), ()> {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

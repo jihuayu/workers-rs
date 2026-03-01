@@ -1,0 +1,5 @@
+error: #[event(tail)] handler must return Result<...>
+ --> tests/ui/event_invalid_tail_return.rs:4:1
+  |
+4 | async fn bad_tail_return(_event: (), _env: (), _ctx: ()) {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

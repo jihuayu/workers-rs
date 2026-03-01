@@ -73,6 +73,15 @@ pub fn durable_object(attr: TokenStream, item: TokenStream) -> TokenStream {
 ///
 /// The macro is expanded into a different function signature, depending on the attributes used
 ///
+/// Canonical signatures validated by the macro:
+///
+/// * `#[event(fetch)]`: `async fn(req, env, ctx) -> Result<impl IntoResponse>`
+/// * `#[event(scheduled)]`: `async fn(event, env, ctx) -> Result<()>`
+/// * `#[event(email)]`: `async fn(message, env, ctx) -> Result<()>`
+/// * `#[event(tail)]`: `async fn(event, env, ctx) -> Result<()>`
+/// * `#[event(queue)]`: `async fn(batch, env, ctx) -> Result<()>`
+/// * `#[event(start)]`: `fn()`
+///
 /// # Fetch
 ///
 /// At a high-level, the `fetch` handler is used to handle incoming HTTP requests. The function signature for a `fetch` handler is conceptually something like:
