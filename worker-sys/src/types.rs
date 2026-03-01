@@ -1,6 +1,7 @@
 mod ai;
 mod analytics_engine;
 mod bot_management;
+mod browser_rendering;
 mod context;
 mod crypto;
 #[cfg(feature = "d1")]
@@ -26,6 +27,7 @@ mod websocket_request_response_pair;
 pub use ai::*;
 pub use analytics_engine::*;
 pub use bot_management::*;
+pub use browser_rendering::*;
 pub use context::*;
 pub use crypto::*;
 #[cfg(feature = "d1")]

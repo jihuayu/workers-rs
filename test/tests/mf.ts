@@ -111,6 +111,9 @@ const mf_instance = new Miniflare({
       wrappedBindings: {
         HTTP_ANALYTICS: {
           scriptName: "mini-analytics-engine" // mock out analytics engine binding to the "mini-analytics-engine" worker
+        },
+        BROWSER_RENDERING: {
+          scriptName: "mini-browser-rendering"
         }
       },
       ratelimits: {
@@ -129,6 +132,17 @@ const mf_instance = new Miniflare({
         return {
           writeDataPoint(data) {
             console.log(data)
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-browser-rendering",
+      modules: true,
+      script: `export default function () {
+        return {
+          async render(input) {
+            return { ok: true, input };
           }
         }
       }`

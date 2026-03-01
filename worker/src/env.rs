@@ -1,6 +1,7 @@
 use std::fmt::Display;
 
 use crate::analytics_engine::AnalyticsEngineDataset;
+use crate::browser_rendering::BrowserRendering;
 #[cfg(feature = "d1")]
 use crate::d1::D1Database;
 use crate::kv::KvStore;
@@ -46,6 +47,11 @@ impl Env {
 
     pub fn analytics_engine(&self, binding: &str) -> Result<AnalyticsEngineDataset> {
         self.get_binding::<AnalyticsEngineDataset>(binding)
+    }
+
+    /// Access a Browser Rendering binding by the name configured in your wrangler.toml file.
+    pub fn browser_rendering(&self, binding: &str) -> Result<BrowserRendering> {
+        self.get_binding::<BrowserRendering>(binding)
     }
 
     /// Access Secret value bindings added to your Worker via the UI or `wrangler`:

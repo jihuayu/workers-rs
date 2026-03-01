@@ -16,6 +16,7 @@ mod alarm;
 mod analytics_engine;
 mod assets;
 mod auto_response;
+mod browser_rendering;
 mod cache;
 mod container;
 mod counter;
