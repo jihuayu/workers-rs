@@ -108,7 +108,6 @@
 //! For now, this relies on JavaScript bindings and may require some manual usage of `wasm-bindgen`.
 //!
 //! Not all features of RPC are supported yet (or have not been tested), including:
-//! - Function arguments and return values
 //! - Class instances
 //! - Stub forwarding
 //!
@@ -196,6 +195,7 @@ pub use crate::request::{FromRequest, Request};
 pub use crate::request_init::*;
 pub use crate::response::{EncodeBody, IntoResponse, Response, ResponseBody, ResponseBuilder};
 pub use crate::router::{RouteContext, RouteParams, Router};
+pub use crate::rpc::*;
 pub use crate::schedule::*;
 pub use crate::secret_store::SecretStore;
 pub use crate::socket::*;
@@ -246,6 +246,7 @@ mod request;
 mod request_init;
 mod response;
 mod router;
+mod rpc;
 mod schedule;
 mod secret_store;
 pub mod send;

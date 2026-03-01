@@ -53,6 +53,26 @@ fn expand_args(method: &wit_parser::Function) -> anyhow::Result<Vec<syn::FnArg>>
     Ok(args)
 }
 
+fn expand_js_args(method: &wit_parser::Function) -> anyhow::Result<Vec<syn::FnArg>> {
+    let mut args = Vec::with_capacity(method.params.len());
+    for (arg_name, _) in &method.params {
+        let param = syn::FnArg::Typed(syn::PatType {
+            attrs: vec![],
+            pat: Box::new(syn::Pat::Ident(syn::PatIdent {
+                attrs: vec![],
+                by_ref: None,
+                mutability: None,
+                ident: format_ident!("{}", arg_name),
+                subpat: None,
+            })),
+            colon_token: Default::default(),
+            ty: Box::new(path_type("::worker::wasm_bindgen::JsValue")?),
+        });
+        args.push(param);
+    }
+    Ok(args)
+}
+
 fn expand_trait(interface: &Interface, interface_name: &Ident) -> anyhow::Result<syn::ItemTrait> {
     let trait_raw = quote!(
         #[async_trait::async_trait]
@@ -120,19 +140,10 @@ fn expand_rpc_impl(
         let invocation_raw = quote!(self.0.#ident());
         let mut invocation_item: syn::ExprMethodCall = syn::parse2(invocation_raw)?;
         for (arg_name, _) in &method.params {
-            let mut segments = syn::punctuated::Punctuated::new();
-            segments.push(syn::PathSegment {
-                ident: format_ident!("{}", arg_name),
-                arguments: syn::PathArguments::None,
-            });
-            invocation_item.args.push(syn::Expr::Path(syn::ExprPath {
-                attrs: vec![],
-                qself: None,
-                path: syn::Path {
-                    leading_colon: None,
-                    segments,
-                },
-            }));
+            let arg_ident = format_ident!("{}", arg_name);
+            invocation_item
+                .args
+                .push(syn::parse2(quote!(::worker::rpc::to_js_value(&#arg_ident)?))?);
         }
 
         let ret_type = if let wit_parser::Results::Anon(ty) = &method.results {
@@ -146,7 +157,7 @@ fn expand_rpc_impl(
                 let promise = #invocation_item?;
                 let fut = ::worker::send::SendFuture::new(::worker::wasm_bindgen_futures::JsFuture::from(promise));
                 let output = fut.await?;
-                Ok(::serde_wasm_bindgen::from_value(output)?)
+                Ok(::worker::rpc::from_js_value(output)?)
             }
         );
 
@@ -178,7 +189,7 @@ fn expand_sys_module(interface: &Interface, sys_name: &Ident) -> anyhow::Result<
             ) -> std::result::Result<::worker::js_sys::Promise, ::worker::wasm_bindgen::JsValue>;
         );
         let mut method_item: syn::ForeignItemFn = syn::parse2(method_raw)?;
-        method_item.sig.inputs.extend(expand_args(method)?);
+        method_item.sig.inputs.extend(expand_js_args(method)?);
         f_mod_item.items.push(syn::ForeignItem::Fn(method_item));
     }
 
@@ -251,4 +262,18 @@ pub fn expand_wit_source(path: &str) -> anyhow::Result<String> {
 pub fn expand_wit_tokens(path: &str) -> anyhow::Result<TokenStream> {
     let file = expand_wit(path)?;
     Ok(file.into_token_stream())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::expand_wit_source;
+
+    #[test]
+    fn generated_client_uses_rpc_serde_bridge() {
+        let source = expand_wit_source("../examples/rpc-client/wit/calculator.wit")
+            .expect("generate source");
+
+        assert!(source.contains("::worker::rpc::to_js_value"));
+        assert!(source.contains("::worker::rpc::from_js_value"));
+    }
 }

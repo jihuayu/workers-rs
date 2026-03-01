@@ -406,7 +406,6 @@ binding = "my_queue"
 For now, this relies on JavaScript bindings and may require some manual usage of `wasm-bindgen`. 
 
 Not all features of RPC are supported yet (or have not been tested), including:
-- Function arguments and return values
 - Class instances
 - Stub forwarding
 
