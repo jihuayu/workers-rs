@@ -205,6 +205,7 @@ fn build_handlers_from_index(content: &str, run_to_completion: bool) -> String {
             || func_name == "queue"
             || func_name == "scheduled"
             || func_name == "email"
+            || func_name == "tail"
         {
             // TODO: Switch these over to https://github.com/wasm-bindgen/wasm-bindgen/pull/4757
             // once that lands.
@@ -264,6 +265,14 @@ mod tests {
         let handlers = build_handlers_from_index(index, false);
         assert!(handlers.contains("Entrypoint.prototype.email"));
         assert!(handlers.contains("exports.email.call(this, arg, this.env, this.ctx)"));
+    }
+
+    #[test]
+    fn generates_tail_wrapper() {
+        let index = "export function tail(event) {}";
+        let handlers = build_handlers_from_index(index, false);
+        assert!(handlers.contains("Entrypoint.prototype.tail"));
+        assert!(handlers.contains("exports.tail.call(this, arg, this.env, this.ctx)"));
     }
 
     #[test]

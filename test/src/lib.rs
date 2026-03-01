@@ -78,6 +78,11 @@ pub async fn on_email(_message: worker::EmailMessage, _env: Env, _ctx: worker::C
     Ok(())
 }
 
+#[event(tail)]
+pub async fn on_tail(_event: worker::TailEvent, _env: Env, _ctx: worker::Context) -> Result<()> {
+    Ok(())
+}
+
 #[cfg(feature = "http")]
 type HandlerRequest = HttpRequest;
 #[cfg(not(feature = "http"))]
