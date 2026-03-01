@@ -202,6 +202,7 @@ pub use crate::streams::*;
 pub use crate::version::*;
 pub use crate::vectorize::*;
 pub use crate::websocket::*;
+pub use crate::workflows::*;
 
 mod abort;
 mod ai;
@@ -251,6 +252,7 @@ mod streams;
 mod version;
 mod vectorize;
 mod websocket;
+mod workflows;
 
 /// A `Result` alias defaulting to [`Error`].
 pub type Result<T, E = error::Error> = StdResult<T, E>;

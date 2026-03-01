@@ -42,6 +42,7 @@ mod sql_counter;
 mod sql_iterator;
 mod user;
 mod vectorize_binding;
+mod workflows_binding;
 mod ws;
 
 #[derive(Deserialize, Serialize)]

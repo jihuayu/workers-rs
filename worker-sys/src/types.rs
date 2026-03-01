@@ -27,6 +27,7 @@ mod vectorize;
 mod version;
 mod websocket_pair;
 mod websocket_request_response_pair;
+mod workflows;
 
 pub use ai::*;
 pub use analytics_engine::*;
@@ -57,3 +58,4 @@ pub use vectorize::*;
 pub use version::*;
 pub use websocket_pair::*;
 pub use websocket_request_response_pair::*;
+pub use workflows::*;

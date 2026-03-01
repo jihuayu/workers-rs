@@ -11,6 +11,7 @@ use crate::Ai;
 use crate::DynamicWorkerLoader;
 use crate::ImagesBinding;
 use crate::VectorizeIndex;
+use crate::WorkflowBinding;
 #[cfg(feature = "queue")]
 use crate::Queue;
 use crate::{durable::ObjectNamespace, Bucket, DynamicDispatcher, Fetcher, Result, SecretStore};
@@ -156,6 +157,11 @@ impl Env {
 
     /// Access a Vectorize index binding by the name configured in your wrangler.toml file.
     pub fn vectorize(&self, binding: &str) -> Result<VectorizeIndex> {
+        self.get_binding(binding)
+    }
+
+    /// Access a Workflows binding by the name configured in your wrangler.toml file.
+    pub fn workflows(&self, binding: &str) -> Result<WorkflowBinding> {
         self.get_binding(binding)
     }
 }

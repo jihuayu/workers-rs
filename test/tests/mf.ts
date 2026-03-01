@@ -126,6 +126,9 @@ const mf_instance = new Miniflare({
         },
         VECTORIZE: {
           scriptName: "mini-vectorize"
+        },
+        WORKFLOWS: {
+          scriptName: "mini-workflows"
         }
       },
       ratelimits: {
@@ -214,6 +217,27 @@ const mf_instance = new Miniflare({
           },
           async delete() {
             return { ok: true };
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-workflows",
+      modules: true,
+      script: `export default function () {
+        return {
+          async trigger(input) {
+            return {
+              ok: true,
+              id: "wf-001",
+              input,
+            };
+          },
+          async getStatus(workflowId) {
+            return {
+              id: workflowId,
+              status: "running",
+            };
           }
         }
       }`
