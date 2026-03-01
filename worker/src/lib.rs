@@ -184,6 +184,7 @@ pub use crate::global::Fetch;
 pub use crate::headers::Headers;
 pub use crate::http::Method;
 pub use crate::hyperdrive::*;
+pub use crate::images::*;
 pub use crate::kv::{KvError, KvStore};
 #[cfg(feature = "queue")]
 pub use crate::queue::*;
@@ -228,6 +229,7 @@ mod global;
 mod headers;
 mod http;
 mod hyperdrive;
+mod images;
 pub mod kv;
 #[cfg(feature = "queue")]
 mod queue;

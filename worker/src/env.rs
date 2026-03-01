@@ -8,6 +8,7 @@ use crate::kv::KvStore;
 use crate::rate_limit::RateLimiter;
 use crate::Ai;
 use crate::DynamicWorkerLoader;
+use crate::ImagesBinding;
 #[cfg(feature = "queue")]
 use crate::Queue;
 use crate::{durable::ObjectNamespace, Bucket, DynamicDispatcher, Fetcher, Result, SecretStore};
@@ -124,6 +125,11 @@ impl Env {
 
     /// Access the worker assets by the binding name configured in your wrangler.toml file.
     pub fn assets(&self, binding: &str) -> Result<Fetcher> {
+        self.get_binding(binding)
+    }
+
+    /// Access an Images binding by the name configured in your wrangler.toml file.
+    pub fn images(&self, binding: &str) -> Result<ImagesBinding> {
         self.get_binding(binding)
     }
 

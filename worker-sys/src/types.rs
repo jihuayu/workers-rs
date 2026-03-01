@@ -12,6 +12,7 @@ mod dynamic_worker_loader;
 mod fetcher;
 mod fixed_length_stream;
 mod hyperdrive;
+mod images;
 mod incoming_request_cf_properties;
 #[cfg(feature = "queue")]
 mod queue;
@@ -39,6 +40,7 @@ pub use dynamic_worker_loader::*;
 pub use fetcher::*;
 pub use fixed_length_stream::*;
 pub use hyperdrive::*;
+pub use images::*;
 pub use incoming_request_cf_properties::*;
 #[cfg(feature = "queue")]
 pub use queue::*;

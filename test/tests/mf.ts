@@ -117,6 +117,9 @@ const mf_instance = new Miniflare({
         },
         DYNAMIC_WORKER_LOADER: {
           scriptName: "mini-dynamic-worker-loader"
+        },
+        IMAGES: {
+          scriptName: "mini-images-binding"
         }
       },
       ratelimits: {
@@ -159,6 +162,21 @@ const mf_instance = new Miniflare({
             return {
               ok: true,
               workerName,
+            };
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-images-binding",
+      modules: true,
+      script: `export default function () {
+        return {
+          async transform(input) {
+            return {
+              ok: true,
+              mode: "binding",
+              input,
             };
           }
         }

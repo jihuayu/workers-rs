@@ -28,6 +28,7 @@ mod form;
 mod js_snippets;
 mod kv;
 mod put_raw;
+mod images_binding;
 mod queue;
 mod r2;
 mod rate_limit;
