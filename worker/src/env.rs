@@ -12,6 +12,7 @@ use crate::DynamicWorkerLoader;
 use crate::ImagesBinding;
 use crate::VectorizeIndex;
 use crate::WorkflowBinding;
+use crate::WorkerVersionMetadata;
 #[cfg(feature = "queue")]
 use crate::Queue;
 use crate::{durable::ObjectNamespace, Bucket, DynamicDispatcher, Fetcher, Result, SecretStore};
@@ -162,6 +163,11 @@ impl Env {
 
     /// Access a Workflows binding by the name configured in your wrangler.toml file.
     pub fn workflows(&self, binding: &str) -> Result<WorkflowBinding> {
+        self.get_binding(binding)
+    }
+
+    /// Access Worker version metadata binding by configured name.
+    pub fn version_metadata(&self, binding: &str) -> Result<WorkerVersionMetadata> {
         self.get_binding(binding)
     }
 }

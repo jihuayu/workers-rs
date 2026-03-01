@@ -129,6 +129,9 @@ const mf_instance = new Miniflare({
         },
         WORKFLOWS: {
           scriptName: "mini-workflows"
+        },
+        VERSION_METADATA: {
+          scriptName: "mini-version-metadata"
         }
       },
       ratelimits: {
@@ -239,6 +242,17 @@ const mf_instance = new Miniflare({
               status: "running",
             };
           }
+        }
+      }`
+    },
+    {
+      name: "mini-version-metadata",
+      modules: true,
+      script: `export default function () {
+        return {
+          id: "ver-001",
+          tag: "stable",
+          timestamp: "2026-01-01T00:00:00.000Z"
         }
       }`
     }]
