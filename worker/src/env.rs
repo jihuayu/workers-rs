@@ -9,6 +9,7 @@ use crate::mtls_certificate::MtlsCertificate;
 use crate::rate_limit::RateLimiter;
 use crate::Ai;
 use crate::DynamicWorkerLoader;
+use crate::SendEmail;
 use crate::ImagesBinding;
 use crate::VectorizeIndex;
 use crate::WorkflowBinding;
@@ -163,6 +164,11 @@ impl Env {
 
     /// Access a Workflows binding by the name configured in your wrangler.toml file.
     pub fn workflows(&self, binding: &str) -> Result<WorkflowBinding> {
+        self.get_binding(binding)
+    }
+
+    /// Access an email sender binding by the name configured in your wrangler.toml file.
+    pub fn send_email(&self, binding: &str) -> Result<SendEmail> {
         self.get_binding(binding)
     }
 

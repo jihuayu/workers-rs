@@ -133,6 +133,12 @@ const mf_instance = new Miniflare({
         VERSION_METADATA: {
           scriptName: "mini-version-metadata"
         },
+        EMAIL_MESSAGE: {
+          scriptName: "mini-email-message"
+        },
+        EMAIL_SENDER: {
+          scriptName: "mini-email-sender"
+        },
         HYPERDRIVE: {
           scriptName: "mini-hyperdrive"
         }
@@ -275,6 +281,50 @@ const mf_instance = new Miniflare({
           id: "ver-001",
           tag: "stable",
           timestamp: "2026-01-01T00:00:00.000Z"
+        }
+      }`
+    },
+    {
+      name: "mini-email-message",
+      modules: true,
+      script: `export default function () {
+        return {
+          from: "sender@example.com",
+          to: "recipient@example.com",
+          raw: new Uint8Array([1, 2, 3, 4]).buffer,
+          headers: { subject: "test" },
+          rawSize: 4,
+          setReject(reason) {
+            this.lastRejectReason = reason;
+          },
+          async forward(rcptTo, headers) {
+            return {
+              ok: true,
+              rcptTo,
+              headers: headers ?? null,
+            };
+          },
+          async reply(message) {
+            return {
+              ok: true,
+              to: message.to,
+            };
+          }
+        }
+      }`
+    },
+    {
+      name: "mini-email-sender",
+      modules: true,
+      script: `export default function () {
+        return {
+          async send(message) {
+            return {
+              ok: true,
+              from: message.from,
+              to: message.to,
+            };
+          }
         }
       }`
     },

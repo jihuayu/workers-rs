@@ -1,6 +1,7 @@
 use crate::{
     alarm, analytics_engine, assets, auto_response, browser_rendering, cache, container, counter,
-    d1, durable, dynamic_worker_loader, fetch, form, js_snippets, kv, put_raw, queue, r2,
+    d1, durable, dynamic_worker_loader, email_binding, fetch, form, js_snippets, kv, put_raw,
+    queue, r2,
     rate_limit, request, secret_store, service, socket, sql_counter, sql_iterator, user, ws,
     hyperdrive, images_binding, mtls_certificate, vectorize_binding, version_metadata,
     workflows_binding, SomeSharedData, GLOBAL_STATE,
@@ -125,6 +126,9 @@ macro_rules! add_routes (
     add_route!($obj, get, "/mtls-certificate", mtls_certificate::mtls_certificate_ok);
     add_route!($obj, get, "/mtls-certificate-missing", mtls_certificate::mtls_certificate_missing);
     add_route!($obj, get, "/mtls-certificate-request-init", mtls_certificate::mtls_certificate_request_init);
+    add_route!($obj, get, "/email-binding-message", email_binding::email_binding_message_ok);
+    add_route!($obj, get, "/email-binding-send", email_binding::email_binding_send_ok);
+    add_route!($obj, get, "/email-binding-send-missing", email_binding::email_binding_send_missing);
     add_route!($obj, get, "/vectorize-binding", vectorize_binding::vectorize_binding_ok);
     add_route!($obj, get, "/vectorize-binding-describe", vectorize_binding::vectorize_binding_describe_ok);
     add_route!($obj, get, "/vectorize-binding-get-by-ids", vectorize_binding::vectorize_binding_get_by_ids_ok);
