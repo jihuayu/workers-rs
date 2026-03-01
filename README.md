@@ -44,7 +44,7 @@ For this fork, add the crate with the published package name while keeping the c
 
 ```toml
 [dependencies]
-worker = { package = "workers-rs-rapid", version = "0.7.5" }
+worker = { package = "workers-rs-rapid", version = "0.8.0" }
 ```
 
 The project uses [wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) for running and publishing your Worker.
