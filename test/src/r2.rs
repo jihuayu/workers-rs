@@ -97,6 +97,26 @@ pub async fn list(_req: Request, env: Env, _data: SomeSharedData) -> Result<Resp
 }
 
 #[worker::send]
+pub async fn list_start_after(_req: Request, env: Env, _data: SomeSharedData) -> Result<Response> {
+    let bucket = env.bucket("SEEDED_BUCKET")?;
+    seed_bucket(&bucket).await?;
+
+    let listed = bucket
+        .list()
+        .start_after("no-props")
+        .execute()
+        .await?;
+
+    let keys: Vec<String> = listed.objects().into_iter().map(|obj| obj.key()).collect();
+    assert_eq!(keys.len(), 2);
+    assert!(!keys.iter().any(|key| key == "no-props"));
+    assert!(keys.iter().any(|key| key == "no-props-no-body"));
+    assert!(keys.iter().any(|key| key == "with-props"));
+
+    Response::ok("ok")
+}
+
+#[worker::send]
 pub async fn get_empty(_req: Request, env: Env, _data: SomeSharedData) -> Result<Response> {
     let bucket = env.bucket("EMPTY_BUCKET")?;
 

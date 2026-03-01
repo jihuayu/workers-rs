@@ -104,6 +104,7 @@ impl Bucket {
             limit: None,
             prefix: None,
             cursor: None,
+            start_after: None,
             delimiter: None,
             include: None,
         }

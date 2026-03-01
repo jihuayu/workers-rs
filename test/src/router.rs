@@ -222,6 +222,7 @@ macro_rules! add_routes (
     add_route!($obj, get, "/kv/put-expiration", kv::put_expiration);
     add_route!($obj, get, "/r2/list-empty", r2::list_empty);
     add_route!($obj, get, "/r2/list", r2::list);
+    add_route!($obj, get, "/r2/list-start-after", r2::list_start_after);
     add_route!($obj, get,"/r2/get-empty", r2::get_empty);
     add_route!($obj, get, "/r2/get", r2::get);
     add_route!($obj, put,  "/r2/put", r2::put);

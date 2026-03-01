@@ -12,6 +12,11 @@ describe("r2", () => {
     expect(await resp.text()).toBe("ok");
   });
 
+  test("list start_after", async () => {
+    const resp = await mf.dispatchFetch(`${mfUrl}r2/list-start-after`);
+    expect(await resp.text()).toBe("ok");
+  });
+
   test("get empty", async () => {
     const resp = await mf.dispatchFetch(`${mfUrl}r2/get-empty`);
     expect(await resp.text()).toBe("ok");

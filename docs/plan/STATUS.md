@@ -15,6 +15,7 @@
 9. `docs/plan/13-pr930-delay-drop-log.md`
 10. `docs/plan/14-pr930-service-binding-http-version-fallback.md`
 11. `docs/plan/15-pr930-hyperdrive-connect.md`
+12. `docs/plan/16-pr930-r2-start-after-and-put-only-if.md`
 
 ## 部分完成（需收尾）
 
@@ -26,8 +27,6 @@
 说明：已有 instance handle/registry primitives；仍需补齐完整实例生命周期与代码生成集成。
 4. `docs/plan/11-rpc-stub-forwarding.md`
 说明：已有 stub forwarding primitives；仍需补齐多跳转发与安全策略、可观测性。
-5. `docs/plan/16-pr930-r2-start-after-and-put-only-if.md`
-说明：`put(...).only_if(...) -> Result<Option<Object>>` 已完成；`list.start_after(...)` 尚未完成。
 
 ## 待开始
 

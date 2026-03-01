@@ -362,6 +362,7 @@ pub struct ListOptionsBuilder<'bucket> {
     pub(crate) limit: Option<u32>,
     pub(crate) prefix: Option<String>,
     pub(crate) cursor: Option<String>,
+    pub(crate) start_after: Option<String>,
     pub(crate) delimiter: Option<String>,
     pub(crate) include: Option<Vec<Include>>,
 }
@@ -383,6 +384,13 @@ impl ListOptionsBuilder<'_> {
     /// retrieved from a previous list operation.
     pub fn cursor(mut self, cursor: impl Into<String>) -> Self {
         self.cursor = Some(cursor.into());
+        self
+    }
+
+    /// A key that indicates where to start listing from. Entries lexicographically less than or
+    /// equal to this value will be excluded from results.
+    pub fn start_after(mut self, start_after: impl Into<String>) -> Self {
+        self.start_after = Some(start_after.into());
         self
     }
 
@@ -416,29 +424,47 @@ impl ListOptionsBuilder<'_> {
     /// Executes the LIST operation on the R2 bucket.
     pub async fn execute(self) -> Result<Objects> {
         let list_promise = self.edge_bucket.list(
-            js_object! {
-                "limit" => self.limit,
-                "prefix" => self.prefix,
-                "cursor" => self.cursor,
-                "delimiter" => self.delimiter,
-                "include" => self
-                    .include
-                    .map(|include| {
-                        let arr = Array::new();
-                        for include in include {
-                            arr.push(&JsString::from(match include {
-                                Include::HttpMetadata => "httpMetadata",
-                                Include::CustomMetadata => "customMetadata",
-                            }));
-                        }
-                        arr.into()
-                    })
-                    .unwrap_or(JsValue::UNDEFINED),
-            }
+            build_list_options_js(
+                self.limit,
+                self.prefix,
+                self.cursor,
+                self.start_after,
+                self.delimiter,
+                self.include,
+            )
             .into(),
         )?;
         let inner = JsFuture::from(list_promise).await?.into();
         Ok(Objects { inner })
+    }
+}
+
+fn build_list_options_js(
+    limit: Option<u32>,
+    prefix: Option<String>,
+    cursor: Option<String>,
+    start_after: Option<String>,
+    delimiter: Option<String>,
+    include: Option<Vec<Include>>,
+) -> JsObject {
+    js_object! {
+        "limit" => limit,
+        "prefix" => prefix,
+        "cursor" => cursor,
+        "startAfter" => start_after,
+        "delimiter" => delimiter,
+        "include" => include
+            .map(|include| {
+                let arr = Array::new();
+                for include in include {
+                    arr.push(&JsString::from(match include {
+                        Include::HttpMetadata => "httpMetadata",
+                        Include::CustomMetadata => "customMetadata",
+                    }));
+                }
+                arr.into()
+            })
+            .unwrap_or(JsValue::UNDEFINED),
     }
 }
 
