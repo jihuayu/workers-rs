@@ -14,6 +14,7 @@ mod fixed_length_stream;
 mod hyperdrive;
 mod images;
 mod incoming_request_cf_properties;
+mod mtls_certificate;
 #[cfg(feature = "queue")]
 mod queue;
 mod r2;
@@ -42,6 +43,7 @@ pub use fixed_length_stream::*;
 pub use hyperdrive::*;
 pub use images::*;
 pub use incoming_request_cf_properties::*;
+pub use mtls_certificate::*;
 #[cfg(feature = "queue")]
 pub use queue::*;
 pub use r2::*;

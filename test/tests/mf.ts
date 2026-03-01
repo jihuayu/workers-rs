@@ -120,6 +120,9 @@ const mf_instance = new Miniflare({
         },
         IMAGES: {
           scriptName: "mini-images-binding"
+        },
+        MTLS_CERTIFICATE: {
+          scriptName: "mini-mtls-certificate"
         }
       },
       ratelimits: {
@@ -179,6 +182,15 @@ const mf_instance = new Miniflare({
               input,
             };
           }
+        }
+      }`
+    },
+    {
+      name: "mini-mtls-certificate",
+      modules: true,
+      script: `export default function () {
+        return {
+          id: "cert-01"
         }
       }`
     }]

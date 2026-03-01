@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::headers::Headers;
 use crate::http::Method;
+use crate::MtlsCertificate;
 
 use js_sys::{self, Object};
 use serde::Serialize;
@@ -59,6 +60,11 @@ impl RequestInit {
 
     pub fn with_cf_properties(&mut self, props: CfProperties) -> &mut Self {
         self.cf = props;
+        self
+    }
+
+    pub fn with_mtls_certificate(&mut self, certificate: &MtlsCertificate) -> &mut Self {
+        self.cf.mtls_certificate = Some(certificate.as_request_cf_value());
         self
     }
 }
@@ -164,6 +170,8 @@ pub struct CfProperties {
     /// Whether ScrapeShield should be enabled for this request, if otherwise configured for this
     /// zone. Defaults to `true`.
     pub scrape_shield: Option<bool>,
+    /// mTLS certificate binding for this subrequest.
+    pub mtls_certificate: Option<JsValue>,
 }
 
 impl From<&CfProperties> for JsValue {
@@ -267,6 +275,10 @@ impl From<&CfProperties> for JsValue {
             );
         }
 
+        if let Some(mtls_certificate) = &props.mtls_certificate {
+            set_prop(&obj, &JsValue::from("mtlsCertificate"), mtls_certificate);
+        }
+
         obj.into()
     }
 }
@@ -298,6 +310,7 @@ impl CfProperties {
             && self.polish == de.polish
             && self.resolve_override == de.resolve_override
             && self.scrape_shield == de.scrape_shield
+            && self.mtls_certificate.is_none()
     }
 }
 
@@ -315,6 +328,7 @@ impl Default for CfProperties {
             polish: None,
             resolve_override: None,
             scrape_shield: Some(true),
+            mtls_certificate: None,
         }
     }
 }

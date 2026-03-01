@@ -5,6 +5,7 @@ use crate::browser_rendering::BrowserRendering;
 #[cfg(feature = "d1")]
 use crate::d1::D1Database;
 use crate::kv::KvStore;
+use crate::mtls_certificate::MtlsCertificate;
 use crate::rate_limit::RateLimiter;
 use crate::Ai;
 use crate::DynamicWorkerLoader;
@@ -134,6 +135,11 @@ impl Env {
     }
 
     pub fn hyperdrive(&self, binding: &str) -> Result<Hyperdrive> {
+        self.get_binding(binding)
+    }
+
+    /// Access an mTLS certificate binding by the name configured in your wrangler.toml file.
+    pub fn mtls_certificate(&self, binding: &str) -> Result<MtlsCertificate> {
         self.get_binding(binding)
     }
 
