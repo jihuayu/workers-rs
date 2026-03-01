@@ -9,6 +9,14 @@ use std::{
 
 use wasm_bindgen::{prelude::Closure, JsCast};
 
+fn timeout_to_clear(awoken: bool, timeout_id: Option<i32>) -> Option<i32> {
+    if awoken {
+        None
+    } else {
+        timeout_id
+    }
+}
+
 /// A [Future] for asynchronously waiting.
 ///
 /// # Example:
@@ -86,15 +94,29 @@ impl PinnedDrop for Delay {
     fn drop(self: Pin<&'_ mut Self>) {
         let this = self.project();
 
-        // If we've already completed the future we don't need to clear the timeout.
-        if this.awoken.get() {
-            return;
-        }
-
-        if let Some(id) = this.timeout_id {
-            crate::console_debug!("{:#?} has been dropped", &this.inner);
+        if let Some(id) = timeout_to_clear(this.awoken.get(), *this.timeout_id) {
             let global: web_sys::WorkerGlobalScope = js_sys::global().unchecked_into();
-            global.clear_timeout_with_handle(*id);
+            global.clear_timeout_with_handle(id);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::timeout_to_clear;
+
+    #[test]
+    fn clears_timeout_when_not_awoken() {
+        assert_eq!(timeout_to_clear(false, Some(42)), Some(42));
+    }
+
+    #[test]
+    fn does_not_clear_timeout_when_awoken() {
+        assert_eq!(timeout_to_clear(true, Some(42)), None);
+    }
+
+    #[test]
+    fn does_not_clear_without_timeout_id() {
+        assert_eq!(timeout_to_clear(false, None), None);
     }
 }
