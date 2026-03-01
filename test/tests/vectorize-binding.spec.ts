@@ -11,6 +11,39 @@ describe("vectorize binding", () => {
     });
   });
 
+  test("describe success path", async () => {
+    const resp = await mf.dispatchFetch(`${mfUrl}vectorize-binding-describe`);
+    expect(resp.status).toBe(200);
+    expect(await resp.json()).toMatchObject({
+      ok: true,
+      dimensions: 3,
+      count: 2,
+    });
+  });
+
+  test("getByIds success path", async () => {
+    const resp = await mf.dispatchFetch(`${mfUrl}vectorize-binding-get-by-ids`);
+    expect(resp.status).toBe(200);
+    expect(await resp.json()).toMatchObject({
+      ok: true,
+      vectors: [
+        { id: "v1", values: [1, 2, 3] },
+        { id: "v2", values: [1, 2, 3] },
+      ],
+    });
+  });
+
+  test("deleteByIds success path", async () => {
+    const resp = await mf.dispatchFetch(
+      `${mfUrl}vectorize-binding-delete-by-ids`
+    );
+    expect(resp.status).toBe(200);
+    expect(await resp.json()).toMatchObject({
+      ok: true,
+      deleted: ["v1"],
+    });
+  });
+
   test("missing binding path", async () => {
     const resp = await mf.dispatchFetch(`${mfUrl}vectorize-binding-missing`);
     expect(resp.status).toBe(200);

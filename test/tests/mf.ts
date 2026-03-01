@@ -214,6 +214,13 @@ const mf_instance = new Miniflare({
           async upsert() {
             return { ok: true };
           },
+          async describe() {
+            return {
+              ok: true,
+              dimensions: 3,
+              count: 2,
+            };
+          },
           async query(input) {
             return {
               ok: true,
@@ -221,8 +228,20 @@ const mf_instance = new Miniflare({
               input,
             };
           },
+          async getByIds(input) {
+            return {
+              ok: true,
+              vectors: input.map((id) => ({ id, values: [1, 2, 3] })),
+            };
+          },
           async delete() {
             return { ok: true };
+          },
+          async deleteByIds(input) {
+            return {
+              ok: true,
+              deleted: input,
+            };
           }
         }
       }`

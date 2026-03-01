@@ -126,6 +126,9 @@ macro_rules! add_routes (
     add_route!($obj, get, "/mtls-certificate-missing", mtls_certificate::mtls_certificate_missing);
     add_route!($obj, get, "/mtls-certificate-request-init", mtls_certificate::mtls_certificate_request_init);
     add_route!($obj, get, "/vectorize-binding", vectorize_binding::vectorize_binding_ok);
+    add_route!($obj, get, "/vectorize-binding-describe", vectorize_binding::vectorize_binding_describe_ok);
+    add_route!($obj, get, "/vectorize-binding-get-by-ids", vectorize_binding::vectorize_binding_get_by_ids_ok);
+    add_route!($obj, get, "/vectorize-binding-delete-by-ids", vectorize_binding::vectorize_binding_delete_by_ids_ok);
     add_route!($obj, get, "/vectorize-binding-missing", vectorize_binding::vectorize_binding_missing);
     add_route!($obj, get, "/workflows-binding", workflows_binding::workflows_binding_ok);
     add_route!($obj, get, "/workflows-binding-missing", workflows_binding::workflows_binding_missing);

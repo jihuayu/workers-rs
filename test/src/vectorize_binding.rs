@@ -14,6 +14,40 @@ pub async fn vectorize_binding_ok(
     Response::from_json(&result)
 }
 
+pub async fn vectorize_binding_describe_ok(
+    _req: Request,
+    env: Env,
+    _data: SomeSharedData,
+) -> Result<Response> {
+    let vectorize = env.vectorize("VECTORIZE")?;
+    let result: serde_json::Value = vectorize.describe().await?;
+    Response::from_json(&result)
+}
+
+pub async fn vectorize_binding_get_by_ids_ok(
+    _req: Request,
+    env: Env,
+    _data: SomeSharedData,
+) -> Result<Response> {
+    let vectorize = env.vectorize("VECTORIZE")?;
+    let result: serde_json::Value = vectorize
+        .get_by_ids(json!(["v1", "v2"]))
+        .await?;
+    Response::from_json(&result)
+}
+
+pub async fn vectorize_binding_delete_by_ids_ok(
+    _req: Request,
+    env: Env,
+    _data: SomeSharedData,
+) -> Result<Response> {
+    let vectorize = env.vectorize("VECTORIZE")?;
+    let result: serde_json::Value = vectorize
+        .delete_by_ids(json!(["v1"]))
+        .await?;
+    Response::from_json(&result)
+}
+
 pub async fn vectorize_binding_missing(
     _req: Request,
     env: Env,
