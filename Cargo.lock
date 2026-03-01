@@ -34,7 +34,7 @@ version = "0.1.0"
 dependencies = [
  "futures-util",
  "serde",
- "workers-rs-rapid",
+ "worker-rapid",
 ]
 
 [[package]]
@@ -2045,14 +2045,14 @@ dependencies = [
  "serde-wasm-bindgen",
  "wasm-bindgen",
  "worker-codegen",
- "workers-rs-rapid",
+ "worker-rapid",
 ]
 
 [[package]]
 name = "rust-rpc-server"
 version = "0.1.0"
 dependencies = [
- "workers-rs-rapid",
+ "worker-rapid",
 ]
 
 [[package]]
@@ -2667,7 +2667,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "tokio-postgres",
- "workers-rs-rapid",
+ "worker-rapid",
 ]
 
 [[package]]
@@ -2890,7 +2890,7 @@ dependencies = [
  "tracing",
  "tracing-subscriber",
  "tracing-web",
- "workers-rs-rapid",
+ "worker-rapid",
 ]
 
 [[package]]
@@ -3975,8 +3975,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "worker-build"
-version = "0.7.5"
+name = "worker-build-rapid"
+version = "0.9.0"
 dependencies = [
  "anyhow",
  "binary-install",
@@ -4038,6 +4038,53 @@ dependencies = [
 ]
 
 [[package]]
+name = "worker-macros-rapid"
+version = "0.9.0"
+dependencies = [
+ "async-trait",
+ "proc-macro2",
+ "quote",
+ "syn",
+ "trybuild",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "wasm-bindgen-macro-support",
+ "worker-sys-rapid",
+]
+
+[[package]]
+name = "worker-rapid"
+version = "0.9.0"
+dependencies = [
+ "async-trait",
+ "axum",
+ "bytes",
+ "chrono",
+ "chrono-tz",
+ "futures-channel",
+ "futures-util",
+ "http",
+ "http-body",
+ "js-sys",
+ "matchit 0.7.3",
+ "pin-project",
+ "serde",
+ "serde-wasm-bindgen",
+ "serde_json",
+ "serde_urlencoded",
+ "tokio",
+ "tokio-postgres",
+ "url",
+ "wasm-bindgen",
+ "wasm-bindgen-futures",
+ "wasm-bindgen-test",
+ "wasm-streams 0.5.0",
+ "web-sys",
+ "worker-macros-rapid",
+ "worker-sys-rapid",
+]
+
+[[package]]
 name = "worker-sandbox"
 version = "0.1.0"
 dependencies = [
@@ -4066,7 +4113,7 @@ dependencies = [
  "uuid",
  "wasm-bindgen",
  "wasm-bindgen-test",
- "workers-rs-rapid",
+ "worker-rapid",
 ]
 
 [[package]]
@@ -4082,6 +4129,16 @@ dependencies = [
 ]
 
 [[package]]
+name = "worker-sys-rapid"
+version = "0.9.0"
+dependencies = [
+ "cfg-if",
+ "js-sys",
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "workers-rs-benchmark"
 version = "0.1.1"
 dependencies = [
@@ -4089,64 +4146,7 @@ dependencies = [
  "serde",
  "serde_json",
  "web-sys",
- "workers-rs-rapid",
-]
-
-[[package]]
-name = "workers-rs-rapid"
-version = "0.8.0"
-dependencies = [
- "async-trait",
- "axum",
- "bytes",
- "chrono",
- "chrono-tz",
- "futures-channel",
- "futures-util",
- "http",
- "http-body",
- "js-sys",
- "matchit 0.7.3",
- "pin-project",
- "serde",
- "serde-wasm-bindgen",
- "serde_json",
- "serde_urlencoded",
- "tokio",
- "tokio-postgres",
- "url",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "wasm-bindgen-test",
- "wasm-streams 0.5.0",
- "web-sys",
- "workers-rs-rapid-macros",
- "workers-rs-rapid-sys",
-]
-
-[[package]]
-name = "workers-rs-rapid-macros"
-version = "0.8.0"
-dependencies = [
- "async-trait",
- "proc-macro2",
- "quote",
- "syn",
- "trybuild",
- "wasm-bindgen",
- "wasm-bindgen-futures",
- "wasm-bindgen-macro-support",
- "workers-rs-rapid-sys",
-]
-
-[[package]]
-name = "workers-rs-rapid-sys"
-version = "0.8.0"
-dependencies = [
- "cfg-if",
- "js-sys",
- "wasm-bindgen",
- "web-sys",
+ "worker-rapid",
 ]
 
 [[package]]

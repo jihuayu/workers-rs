@@ -1,6 +1,6 @@
 [package]
-name = "workers-rs-rapid"
-version = "0.8.0"
+name = "worker-rapid"
+version = "0.9.0"
 authors = ["Cloudflare Workers Team <workers@cloudflare.com>"]
 repository = "https://github.com/cloudflare/workers-rs"
 edition = "2018"

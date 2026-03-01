@@ -72,10 +72,10 @@ web-sys = { version = "0.3.90", features = [
     "WritableStream",
     "WritableStreamDefaultWriter",
 ] }
-worker = { package = "workers-rs-rapid", version = "0.8.0", path = "worker", features = ["queue", "d1", "axum", "timezone"] }
+worker = { package = "worker-rapid", version = "0.9.0", path = "worker", features = ["queue", "d1", "axum", "timezone"] }
 worker-codegen = { path = "worker-codegen", version = "0.2.0" }
-worker-macros = { package = "workers-rs-rapid-macros", version = "0.8.0", path = "worker-macros", features = ["queue"] }
-worker-sys = { package = "workers-rs-rapid-sys", version = "0.8.0", path = "worker-sys", features = ["d1", "queue"] }
+worker-macros = { package = "worker-macros-rapid", version = "0.9.0", path = "worker-macros", features = ["queue"] }
+worker-sys = { package = "worker-sys-rapid", version = "0.9.0", path = "worker-sys", features = ["d1", "queue"] }
 
 [profile.release]
 # rustc supports two "optimize for size" levels:  opt-level = "s" and "z".

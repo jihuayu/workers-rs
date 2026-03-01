@@ -376,12 +376,22 @@ impl Build {
     fn step_check_lib_versions(&mut self) -> Result<()> {
         let lockfile = Lockfile::new(&self.crate_data.data)?;
 
-        lockfile.require_lib("worker", &MIN_WORKER_LIB_VERSION, &CUR_WORKER_VERSION).map_err(|err| match err {
+        let worker_dep = lockfile
+            .require_lib("worker-rapid", &MIN_WORKER_LIB_VERSION, &CUR_WORKER_VERSION)
+            .or_else(|err| match err {
+                // Backward compatibility for users still pinned to upstream worker crate.
+                DepCheckError::VersionError(_, None) => {
+                    lockfile.require_lib("worker", &MIN_WORKER_LIB_VERSION, &CUR_WORKER_VERSION)
+                }
+                _ => Err(err),
+            });
+
+        worker_dep.map_err(|err| match err {
             DepCheckError::VersionError(msg, Some(version)) => {
                 anyhow!(
-                    "{msg}\n\nEither upgrade to worker@{}, or use an older worker-build toolchain (e.g. by updating wrangler.toml to use `{}`).",
+                    "{msg}\n\nEither upgrade to worker-rapid@{}, or use an older worker-build toolchain (e.g. by updating wrangler.toml to use `{}`).",
                     *MIN_WORKER_LIB_VERSION,
-                    style(format!("cargo install worker-build@^{}",
+                    style(format!("cargo install worker-build-rapid@^{}",
                     // Prior to worker@0.6 toolchain was 0.1 with no lock
                     if version.major == 0 && version.minor <= 6 {
                         "0.1".to_string()

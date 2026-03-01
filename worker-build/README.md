@@ -7,7 +7,7 @@ This is a tool to be used as a custom build command for a Cloudflare Workers pro
 # ...
 
 [build]
-command = "cargo install -q worker-build && worker-build --release"
+command = "cargo install -q worker-build-rapid && worker-build --release"
 
 [build.upload]
 dir    = "build/worker"

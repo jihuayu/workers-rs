@@ -1,6 +1,6 @@
 ![workers-rs](.github/logo.png)
-[![crates.io](https://img.shields.io/crates/v/workers-rs-rapid)](https://crates.io/crates/workers-rs-rapid)
-[![docs.rs](https://img.shields.io/docsrs/workers-rs-rapid)](https://docs.rs/workers-rs-rapid)
+[![crates.io](https://img.shields.io/crates/v/worker-rapid)](https://crates.io/crates/worker-rapid)
+[![docs.rs](https://img.shields.io/docsrs/worker-rapid)](https://docs.rs/worker-rapid)
 
 **Work-in-progress** ergonomic Rust bindings to Cloudflare Workers environment. Write your entire worker in Rust!
 
@@ -44,7 +44,7 @@ For this fork, add the crate with the published package name while keeping the c
 
 ```toml
 [dependencies]
-worker = { package = "workers-rs-rapid", version = "0.8.0" }
+worker = { package = "worker-rapid", version = "0.9.0" }
 ```
 
 The project uses [wrangler](https://github.com/cloudflare/workers-sdk/tree/main/packages/wrangler) for running and publishing your Worker.
@@ -344,7 +344,7 @@ As queues are in beta you need to enable the `queue` feature flag.
 
 Enable it by adding it to the worker dependency in your `Cargo.toml`:
 ```toml
-worker = { package = "workers-rs-rapid", version = "...", features = ["queue"] }
+worker = { package = "worker-rapid", version = "...", features = ["queue"] }
 ```
 
 ### Example worker consuming and producing messages:
@@ -502,7 +502,7 @@ assert.strictEqual(await res.text(), "Hello, World!");
 As D1 databases are in alpha, you'll need to enable the `d1` feature on the `worker` crate.
 
 ```toml
-worker = { package = "workers-rs-rapid", version = "x.y.z", features = ["d1"] }
+worker = { package = "worker-rapid", version = "x.y.z", features = ["d1"] }
 ```
 
 ### Example usage
@@ -582,7 +582,7 @@ please [take a look](https://www.cloudflare.com/careers/).
 1. [Trigger](https://github.com/cloudflare/workers-rs/actions/workflows/create-release-pr.yml) a workflow to create a release PR.
 1. Review version changes and merge PR.
 1. A draft GitHub release will be created. Author release notes and publish when ready.
-1. Crates (`workers-rs-rapid-sys`, `workers-rs-rapid-macros`, `workers-rs-rapid`) will be published automatically. 
+1. Crates (`worker-sys-rapid`, `worker-macros-rapid`, `worker-rapid`, `worker-build-rapid`) will be published automatically. 
 
 # Contributing
 
@@ -592,10 +592,10 @@ an issue to talk about the change you'd like to make as early as possible.
 
 ## Project Contents
 
-- **worker** (published as `workers-rs-rapid`): the user-facing crate, with Rust-familiar abstractions over the Rust<->JS/WebAssembly
+- **worker** (published as `worker-rapid`): the user-facing crate, with Rust-familiar abstractions over the Rust<->JS/WebAssembly
   interop via wrappers and convenience library over the FFI bindings.
-- **worker-sys** (published as `workers-rs-rapid-sys`): Rust extern "C" definitions for FFI compatibility with the Workers JS Runtime.
-- **worker-macros** (published as `workers-rs-rapid-macros`): exports `event` and `durable_object` macros for wrapping Rust entry point in a
+- **worker-sys** (published as `worker-sys-rapid`): Rust extern "C" definitions for FFI compatibility with the Workers JS Runtime.
+- **worker-macros** (published as `worker-macros-rapid`): exports `event` and `durable_object` macros for wrapping Rust entry point in a
   `fetch` method of an ES Module, and code generation to create and interact with Durable Objects.
 - **worker-sandbox**: a functioning Cloudflare Worker for testing features and ergonomics.
-- **worker-build**: a cross-platform build command for `workers-rs`-based projects.
+- **worker-build** (published as `worker-build-rapid`): a cross-platform build command for `workers-rs`-based projects.

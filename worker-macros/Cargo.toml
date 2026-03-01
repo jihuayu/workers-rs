@@ -1,6 +1,6 @@
 [package]
-name = "workers-rs-rapid-macros"
-version = "0.8.0"
+name = "worker-macros-rapid"
+version = "0.9.0"
 authors = ["Cloudflare Workers Team <workers@cloudflare.com>"]
 repository = "https://github.com/cloudflare/workers-rs/tree/main/worker-macros"
 edition = "2021"
