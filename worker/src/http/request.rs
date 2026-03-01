@@ -15,7 +15,7 @@ fn version_from_string(version: &str) -> http::Version {
         "HTTP/1.1" => http::Version::HTTP_11,
         "HTTP/2" => http::Version::HTTP_2,
         "HTTP/3" => http::Version::HTTP_3,
-        _ => unreachable!("no other versions exist"),
+        _ => http::Version::HTTP_11,
     }
 }
 
@@ -85,4 +85,24 @@ pub fn to_wasm<B: http_body::Body<Data = Bytes> + 'static>(
     }
 
     Ok(web_sys::Request::new_with_str_and_init(&uri, &init)?)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::version_from_string;
+
+    #[test]
+    fn maps_known_versions() {
+        assert_eq!(version_from_string("HTTP/0.9"), http::Version::HTTP_09);
+        assert_eq!(version_from_string("HTTP/1.0"), http::Version::HTTP_10);
+        assert_eq!(version_from_string("HTTP/1.1"), http::Version::HTTP_11);
+        assert_eq!(version_from_string("HTTP/2"), http::Version::HTTP_2);
+        assert_eq!(version_from_string("HTTP/3"), http::Version::HTTP_3);
+    }
+
+    #[test]
+    fn falls_back_to_http11_for_unknown_versions() {
+        assert_eq!(version_from_string("HTTP/9.9"), http::Version::HTTP_11);
+        assert_eq!(version_from_string("gopher"), http::Version::HTTP_11);
+    }
 }
