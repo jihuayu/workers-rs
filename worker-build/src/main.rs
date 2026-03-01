@@ -157,6 +157,14 @@ fn generate_handlers(out_dir: &Path) -> Result<String> {
     let content = fs::read_to_string(&index_path)
         .with_context(|| format!("Failed to read {}", index_path.display()))?;
 
+    Ok(build_handlers_from_index(
+        &content,
+        env::var("RUN_TO_COMPLETION").is_ok(),
+    ))
+}
+
+fn build_handlers_from_index(content: &str, run_to_completion: bool) -> String {
+
     // Extract ESM function exports from the wasm-bindgen generated output.
     // This code is specialized to what wasm-bindgen outputs for ESM and is therefore
     // brittle to upstream changes. It is comprehensive to current output patterns though.
@@ -186,14 +194,18 @@ fn generate_handlers(out_dir: &Path) -> Result<String> {
 
     let mut handlers = String::new();
     for func_name in func_names {
-        if func_name == "fetch" && env::var("RUN_TO_COMPLETION").is_ok() {
+        if func_name == "fetch" && run_to_completion {
             handlers += "Entrypoint.prototype.fetch = async function fetch(request) {
   let response = exports.fetch(request, this.env, this.ctx);
   this.ctx.waitUntil(response);
   return response;
 }
 ";
-        } else if func_name == "fetch" || func_name == "queue" || func_name == "scheduled" {
+        } else if func_name == "fetch"
+            || func_name == "queue"
+            || func_name == "scheduled"
+            || func_name == "email"
+        {
             // TODO: Switch these over to https://github.com/wasm-bindgen/wasm-bindgen/pull/4757
             // once that lands.
             handlers += &format!(
@@ -207,7 +219,7 @@ fn generate_handlers(out_dir: &Path) -> Result<String> {
         }
     }
 
-    Ok(handlers)
+    handlers
 }
 
 static SYSTEM_FNS: &[&str] = &["__wbg_reset_state", "setPanicHook"];
@@ -241,6 +253,26 @@ fn add_export_wrappers(out_dir: &Path) -> Result<()> {
 }
 
 const INSTALL_HELP: &str = "In case you are missing the binary, you can install it using: `cargo install wasm-coredump-rewriter`";
+
+#[cfg(test)]
+mod tests {
+    use super::build_handlers_from_index;
+
+    #[test]
+    fn generates_email_wrapper() {
+        let index = "export function email(event) {}";
+        let handlers = build_handlers_from_index(index, false);
+        assert!(handlers.contains("Entrypoint.prototype.email"));
+        assert!(handlers.contains("exports.email.call(this, arg, this.env, this.ctx)"));
+    }
+
+    #[test]
+    fn keeps_non_event_exports_direct() {
+        let index = "export function ping() {}";
+        let handlers = build_handlers_from_index(index, false);
+        assert_eq!(handlers.trim(), "Entrypoint.prototype.ping = exports.ping;");
+    }
+}
 
 fn wasm_coredump(out_dir: &Path) -> Result<()> {
     let coredump_flags = env::var("COREDUMP_FLAGS");

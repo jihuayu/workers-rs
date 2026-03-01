@@ -73,6 +73,11 @@ pub fn start() {
     GLOBAL_STATE.store(true, Ordering::SeqCst);
 }
 
+#[event(email)]
+pub async fn on_email(_message: worker::EmailMessage, _env: Env, _ctx: worker::Context) -> Result<()> {
+    Ok(())
+}
+
 #[cfg(feature = "http")]
 type HandlerRequest = HttpRequest;
 #[cfg(not(feature = "http"))]
