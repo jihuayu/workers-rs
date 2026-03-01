@@ -2,8 +2,8 @@ use crate::{
     alarm, analytics_engine, assets, auto_response, browser_rendering, cache, container, counter,
     d1, durable, dynamic_worker_loader, fetch, form, js_snippets, kv, put_raw, queue, r2,
     rate_limit, request, secret_store, service, socket, sql_counter, sql_iterator, user, ws,
-    images_binding, mtls_certificate, vectorize_binding, version_metadata, workflows_binding,
-    SomeSharedData, GLOBAL_STATE,
+    hyperdrive, images_binding, mtls_certificate, vectorize_binding, version_metadata,
+    workflows_binding, SomeSharedData, GLOBAL_STATE,
 };
 #[cfg(feature = "http")]
 use std::convert::TryInto;
@@ -131,6 +131,8 @@ macro_rules! add_routes (
     add_route!($obj, get, "/workflows-binding-missing", workflows_binding::workflows_binding_missing);
     add_route!($obj, get, "/version-metadata", version_metadata::version_metadata_ok);
     add_route!($obj, get, "/version-metadata-missing", version_metadata::version_metadata_missing);
+    add_route!($obj, get, "/hyperdrive-connect", hyperdrive::hyperdrive_connect_ok);
+    add_route!($obj, get, "/hyperdrive-connect-missing", hyperdrive::hyperdrive_connect_missing);
     add_route!($obj, get, "/async-request", request::handle_async_request);
     add_route!($obj, get, format_route!("/asset/{}", "name"), assets::handle_asset);
     add_route!($obj, get, "/websocket", ws::handle_websocket);

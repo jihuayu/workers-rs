@@ -2,6 +2,7 @@ use wasm_bindgen::{JsCast, JsValue};
 use worker_sys::types::Hyperdrive as HyperdriveSys;
 
 use crate::EnvBinding;
+use crate::{socket::socket_options_to_js_value, Socket, SocketOptions};
 
 #[derive(Debug)]
 pub struct Hyperdrive(HyperdriveSys);
@@ -11,6 +12,20 @@ unsafe impl Sync for Hyperdrive {}
 
 impl EnvBinding for Hyperdrive {
     const TYPE_NAME: &'static str = "Hyperdrive";
+
+    fn get(val: JsValue) -> crate::Result<Self> {
+        if !val.is_object() {
+            return Err("Binding cannot be cast to Hyperdrive from non-object value".into());
+        }
+
+        let has_connect = js_sys::Reflect::has(&val, &JsValue::from("connect"))?;
+        let has_connection_string = js_sys::Reflect::has(&val, &JsValue::from("connectionString"))?;
+        if !has_connect || !has_connection_string {
+            return Err("Binding cannot be cast to Hyperdrive: missing required methods/properties".into());
+        }
+
+        Ok(Self(val.unchecked_into()))
+    }
 }
 
 impl JsCast for Hyperdrive {
@@ -40,6 +55,16 @@ impl From<Hyperdrive> for JsValue {
 }
 
 impl Hyperdrive {
+    pub fn connect(&self) -> crate::Result<Socket> {
+        self.connect_with_options(SocketOptions::default())
+    }
+
+    pub fn connect_with_options(&self, options: SocketOptions) -> crate::Result<Socket> {
+        let options = socket_options_to_js_value(&options);
+        let socket = self.0.connect(options)?;
+        Ok(Socket::from_inner(socket))
+    }
+
     pub fn connection_string(&self) -> String {
         self.0.connection_string()
     }

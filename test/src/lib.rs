@@ -25,6 +25,7 @@ mod durable;
 mod dynamic_worker_loader;
 mod fetch;
 mod form;
+mod hyperdrive;
 mod js_snippets;
 mod kv;
 mod put_raw;

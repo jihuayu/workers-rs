@@ -14,6 +14,7 @@
 8. `docs/plan/12-env-version-metadata.md`
 9. `docs/plan/13-pr930-delay-drop-log.md`
 10. `docs/plan/14-pr930-service-binding-http-version-fallback.md`
+11. `docs/plan/15-pr930-hyperdrive-connect.md`
 
 ## 部分完成（需收尾）
 
@@ -30,5 +31,5 @@
 
 ## 待开始
 
-1. `docs/plan/15-pr930-hyperdrive-connect.md`
+（无）
 

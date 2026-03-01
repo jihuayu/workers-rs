@@ -91,6 +91,10 @@ impl Socket {
         }
     }
 
+    pub(crate) fn from_inner(inner: worker_sys::Socket) -> Self {
+        Self::new(inner)
+    }
+
     /// Closes the TCP socket. Both the readable and writable streams are forcibly closed.
     pub async fn close(&mut self) -> Result<()> {
         JsFuture::from(self.inner.close()?).await?;
@@ -359,19 +363,27 @@ impl ConnectionBuilder {
         )
         .into();
 
-        let options: JsValue = js_object!(
-            "allowHalfOpen" => JsBoolean::from(self.options.allow_half_open),
-            "secureTransport" => JsString::from(match self.options.secure_transport {
-                SecureTransport::On => "on",
-                SecureTransport::Off => "off",
-                SecureTransport::StartTls => "starttls",
-            })
-        )
-        .into();
+        let options = socket_options_to_js_value(&self.options);
 
         let inner = worker_sys::connect(address, options)?;
         Ok(Socket::new(inner))
     }
+}
+
+pub(crate) fn secure_transport_label(secure_transport: &SecureTransport) -> &'static str {
+    match secure_transport {
+        SecureTransport::On => "on",
+        SecureTransport::Off => "off",
+        SecureTransport::StartTls => "starttls",
+    }
+}
+
+pub(crate) fn socket_options_to_js_value(options: &SocketOptions) -> JsValue {
+    js_object!(
+        "allowHalfOpen" => JsBoolean::from(options.allow_half_open),
+        "secureTransport" => JsString::from(secure_transport_label(&options.secure_transport))
+    )
+    .into()
 }
 
 // Writes as much as possible to buf, and stores the rest in internal buffer
@@ -444,6 +456,14 @@ pub mod postgres_tls {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn secure_transport_labels_match_runtime_strings() {
+        assert_eq!(secure_transport_label(&SecureTransport::On), "on");
+        assert_eq!(secure_transport_label(&SecureTransport::Off), "off");
+        assert_eq!(secure_transport_label(&SecureTransport::StartTls), "starttls");
+    }
+
     #[test]
     fn test_handle_data() {
         let mut arr = vec![0u8; 32];

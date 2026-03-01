@@ -132,6 +132,9 @@ const mf_instance = new Miniflare({
         },
         VERSION_METADATA: {
           scriptName: "mini-version-metadata"
+        },
+        HYPERDRIVE: {
+          scriptName: "mini-hyperdrive"
         }
       },
       ratelimits: {
@@ -253,6 +256,30 @@ const mf_instance = new Miniflare({
           id: "ver-001",
           tag: "stable",
           timestamp: "2026-01-01T00:00:00.000Z"
+        }
+      }`
+    },
+    {
+      name: "mini-hyperdrive",
+      modules: true,
+      script: `export default function () {
+        return {
+          connectionString: "postgres://user:pass@db.example.com:5432/app",
+          host: "db.example.com",
+          port: 5432,
+          user: "user",
+          password: "pass",
+          database: "app",
+          connect() {
+            return {
+              close: async () => {},
+              closed: Promise.resolve(),
+              opened: Promise.resolve({}),
+              startTls() { return this; },
+              readable: new ReadableStream(),
+              writable: new WritableStream(),
+            };
+          }
         }
       }`
     }]

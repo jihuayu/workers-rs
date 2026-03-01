@@ -1,5 +1,7 @@
 use wasm_bindgen::prelude::*;
 
+use crate::types::Socket;
+
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(extends=js_sys::Object)]
@@ -23,4 +25,7 @@ extern "C" {
 
     #[wasm_bindgen(method, getter, js_name=database)]
     pub fn database(this: &Hyperdrive) -> String;
+
+    #[wasm_bindgen(method, catch)]
+    pub fn connect(this: &Hyperdrive, options: JsValue) -> Result<Socket, JsValue>;
 }
